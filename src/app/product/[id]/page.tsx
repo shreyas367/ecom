@@ -1,3 +1,4 @@
+// app/product/[id]/page.tsx
 import { getProductById } from '@/lib/productService';
 import { notFound } from 'next/navigation';
 import AddToCartButton from '@/components/AddToCartButton';
@@ -10,8 +11,8 @@ type Props = {
 
 export default async function ProductDetailPage({ params }: Props) {
   const product = await getProductById(params.id);
-
   if (!product) return notFound();
+  
 
   return (
     <div className="p-4">
@@ -24,10 +25,9 @@ export default async function ProductDetailPage({ params }: Props) {
       <p className="text-lg text-blue-600 font-bold mb-2">₹{product.price}</p>
       <p className="text-gray-700">{product.description}</p>
 
-      {/* ✅ Client-side Add to Cart button */}
       <AddToCartButton
         product={{
-          id: product._id,
+          id: product._id.toString(), // ensure it's string
           title: product.title,
           price: product.price,
           image: product.image,

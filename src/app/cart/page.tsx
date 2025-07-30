@@ -17,7 +17,13 @@ export default function CartPage() {
           {cart.map((item) => (
             <div key={item._id} className="flex items-center justify-between border p-3 rounded">
               <div className="flex items-center gap-4">
-                <img src={item.image} alt={item.title} className="w-16 h-16 object-cover rounded" />
+                <img
+                      src={item.image || "https://via.placeholder.com/150"}  // use a valid fallback image
+                       alt={item.title}
+                         width={100}
+                           height={100}
+                        />
+
                 <div>
                   <p className="font-semibold">{item.title}</p>
                   <p className="text-sm text-gray-500">Qty: {item.quantity}</p>
