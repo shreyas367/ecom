@@ -12,7 +12,7 @@ type Props = {
 export default async function ProductDetailPage({ params }: Props) {
   const product = await getProductById(params.id);
   if (!product) return notFound();
-  console.log("hlo  ",product)
+  
   
   
 
