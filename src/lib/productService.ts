@@ -5,6 +5,7 @@ import Product from "@/models/Product";
 
 export async function getProductById(id: string) {
   await connectDB();
+   console.log("🔍 Fetching product from server:", id);
   try {
     const product = await Product.findById(id);
     if (!product) return null;

@@ -1,4 +1,5 @@
 import ProductCard from "@/components/ProductCard";
+import Link from "next/link";
 
 type Product = {
   _id: string;
@@ -18,7 +19,9 @@ export default async function HomePage() {
       <h1 className="text-2xl font-bold mb-4">🛍 Latest Products</h1>
       <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
         {products.map((product) => (
-          <ProductCard key={product._id} {...product} />
+          <Link key={product._id} href={`/product/${product._id}`}>
+            <ProductCard {...product} />
+          </Link>
         ))}
       </div>
     </main>
