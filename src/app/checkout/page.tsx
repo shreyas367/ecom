@@ -2,13 +2,31 @@
 "use client";
 
 import { useCart } from "@/context/CartContext";
-import { useState } from "react";
+import { useSession, signIn } from "next-auth/react";
+import { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
 
 export default function CheckoutPage() {
+  const { data: session, status } = useSession();
+  const router = useRouter();
   const { cart, clearCart } = useCart();
   const [address, setAddress] = useState("");
 
   const total = cart.reduce((sum, item) => sum + item.price * item.quantity, 0);
+
+  useEffect(() => {
+    if (status === "unauthenticated") {
+      signIn(); // redirect to login if not signed in
+    }
+  }, [status]);
+
+  if (status === "loading") {
+    return <p className="p-6 text-lg">Loading...</p>;
+  }
+
+  if (!session) {
+    return null; // while redirecting
+  }
 
   const handleOrder = () => {
     if (!address.trim()) {
@@ -16,8 +34,9 @@ export default function CheckoutPage() {
       return;
     }
 
-    alert("✅ Order placed!\n📦 Delivery to: " + address);
+    alert(`✅ Order placed by ${session.user?.email}\n📦 Delivery to: ${address}`);
     clearCart();
+    router.push("/"); // redirect to home
   };
 
   return (
@@ -26,10 +45,7 @@ export default function CheckoutPage() {
 
       <div className="space-y-4">
         {cart.map((item) => (
-          <div
-            key={item._id}
-            className="flex justify-between items-center border p-4 rounded"
-          >
+          <div key={item._id} className="flex justify-between border p-4 rounded">
             <div>
               <p className="font-semibold">{item.title}</p>
               <p className="text-sm text-gray-600">
