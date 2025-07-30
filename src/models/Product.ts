@@ -1,6 +1,21 @@
-import mongoose, { Schema, models } from "mongoose";
+// src/models/Product.ts
+import mongoose, { Schema, Document, models } from "mongoose";
 
-const productSchema = new Schema(
+// Define the TypeScript interface
+export interface IProduct extends Document {
+  _id:string,
+  title: string;
+  description: string;
+  price: number;
+  image: string;
+  category: string;
+  brand: string;
+  stock: number;
+  createdAt: Date;
+  updatedAt: Date;
+}
+
+const productSchema = new Schema<IProduct>(
   {
     title: { type: String, required: true },
     description: String,
@@ -13,5 +28,5 @@ const productSchema = new Schema(
   { timestamps: true }
 );
 
-const Product = models.Product || mongoose.model("Product", productSchema);
+const Product = models.Product || mongoose.model<IProduct>("Product", productSchema);
 export default Product;
