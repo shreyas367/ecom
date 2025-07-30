@@ -1,5 +1,6 @@
-import { getProductById } from "@/lib/productService";
-import { notFound } from "next/navigation";
+import { getProductById } from '@/lib/productService';
+import { notFound } from 'next/navigation';
+import AddToCartButton from '@/components/AddToCartButton';
 
 type Props = {
   params: {
@@ -22,9 +23,16 @@ export default async function ProductDetailPage({ params }: Props) {
       />
       <p className="text-lg text-blue-600 font-bold mb-2">₹{product.price}</p>
       <p className="text-gray-700">{product.description}</p>
-      <button className="bg-black text-white px-4 py-2 rounded mt-4">
-        Add to Cart
-      </button>
+
+      {/* ✅ Client-side Add to Cart button */}
+      <AddToCartButton
+        product={{
+          id: product._id,
+          title: product.title,
+          price: product.price,
+          image: product.image,
+        }}
+      />
     </div>
   );
 }
