@@ -3,6 +3,28 @@
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { motion } from "framer-motion";
+const FloatingCube = () => {
+  return (
+    <motion.div
+      animate={{
+        rotate: [0, 360, 360],
+        x: [0, 10, -10, 0],
+        y: [0, -10, 10, 0],
+      }}
+      transition={{
+        duration: 6,
+        repeat: Infinity,
+        ease: "easeInOut",
+      }}
+      className="w-24 h-24 bg-gradient-to-br from-indigo-500 to-purple-600 rounded-xl shadow-2xl"
+      style={{
+        transformStyle: "preserve-3d",
+      }}
+    />
+  );
+};
+
+
 
 export default function SignUpPage() {
   const router = useRouter();
@@ -27,8 +49,11 @@ export default function SignUpPage() {
       initial={{ opacity: 0, y: 40 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5, ease: "easeOut" }}
-      className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-100 to-indigo-200 px-4"
+      className="min-h-screen relative flex items-center justify-center bg-gradient-to-br from-blue-100 to-indigo-200 px-4"
     >
+       <div className="absolute top-10 left-10">
+    <FloatingCube />
+  </div>
       <form
         onSubmit={handleRegister}
         className="w-full max-w-md p-8 bg-white rounded-2xl shadow-lg space-y-6"
