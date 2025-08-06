@@ -1,9 +1,9 @@
-// src/app/(auth)/sign-in/page.tsx
-'use client'
+'use client';
 
 import { signIn } from "next-auth/react";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { motion } from "framer-motion";
 
 export default function SignInPage() {
   const router = useRouter();
@@ -22,25 +22,73 @@ export default function SignInPage() {
     else alert("Invalid credentials");
   };
 
+  const handleOAuthLogin = async (provider: "google" | "github") => {
+    await signIn(provider, { callbackUrl: "/" });
+  };
+
   return (
-    <form onSubmit={handleLogin} className="max-w-md mx-auto mt-20 space-y-4">
-      <input
-        className="w-full p-2 border"
-        type="email"
-        placeholder="Email"
-        value={email}
-        onChange={(e) => setEmail(e.target.value)}
-      />
-      <input
-        className="w-full p-2 border"
-        type="password"
-        placeholder="Password"
-        value={password}
-        onChange={(e) => setPassword(e.target.value)}
-      />
-      <button className="bg-black text-white px-4 py-2" type="submit">
-        Sign In
-      </button>
-    </form>
+    <motion.div
+      initial={{ opacity: 0, y: 40 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.5 }}
+      className="min-h-screen flex items-center justify-center bg-gradient-to-br from-white to-gray-100"
+    >
+      <form
+        onSubmit={handleLogin}
+        className="bg-white shadow-lg rounded-2xl p-8 w-full max-w-md space-y-6 animate-fade-in"
+      >
+        <h2 className="text-2xl font-bold text-center">Sign In</h2>
+
+        <input
+          className="w-full px-4 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-black"
+          type="email"
+          placeholder="Email"
+          autoComplete="off"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+        />
+
+        <input
+          className="w-full px-4 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-black"
+          type="password"
+          placeholder="Password"
+          autoComplete="off"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+        />
+
+        <button
+          type="submit"
+          className="w-full bg-black text-white py-2 rounded hover:bg-gray-800 transition-colors duration-200"
+        >
+          Sign In
+        </button>
+
+        <div className="flex items-center justify-between gap-4">
+          <button
+            type="button"
+            onClick={() => handleOAuthLogin("google")}
+            className="w-full bg-red-500 text-white py-2 rounded hover:bg-red-600 transition-colors duration-200"
+          >
+            Continue with Google
+          </button>
+
+          <button
+            type="button"
+            onClick={() => handleOAuthLogin("github")}
+            className="w-full bg-gray-800 text-white py-2 rounded hover:bg-gray-900 transition-colors duration-200"
+          >
+            GitHub
+          </button>
+        </div>
+
+        <p className="text-center text-sm text-gray-600">
+          Don&apos;t have an account?{" "}
+          <a href="/sign-up" className="text-blue-600 hover:underline">
+            Sign up
+          </a>
+        </p>
+      </form>
+    </motion.div>
   );
 }

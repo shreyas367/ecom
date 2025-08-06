@@ -4,6 +4,7 @@ import { AuthOptions } from "next-auth";
 import { connectDB } from "@/lib/db";
 import User from "@/models/User";
 import bcrypt from "bcryptjs";
+import GoogleProvider from "next-auth/providers/google";
 
 export const authOptions: AuthOptions = {
   providers: [
@@ -23,6 +24,11 @@ export const authOptions: AuthOptions = {
 
         return { id: user._id.toString(), name: user.name, email: user.email };
       },
+    }),
+     // ✅ Google OAuth
+    GoogleProvider({
+      clientId: process.env.GOOGLE_CLIENT_ID!,
+      clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
     }),
   ],
   pages: {
