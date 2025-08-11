@@ -1,8 +1,8 @@
 'use client'
 
-import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { motion } from "framer-motion";
+
 const FloatingCube = () => {
   return (
     <motion.div
@@ -24,23 +24,29 @@ const FloatingCube = () => {
   );
 };
 
-
-
 export default function SignUpPage() {
-  const router = useRouter();
   const [form, setForm] = useState({ name: "", email: "", password: "" });
+  const [successMessage, setSuccessMessage] = useState("");
+  const [errorMessage, setErrorMessage] = useState("");
 
   const handleRegister = async (e: React.FormEvent) => {
     e.preventDefault();
+    setErrorMessage("");
+    setSuccessMessage("");
+
     const res = await fetch("/api/auth/sign-up", {
       method: "POST",
+      headers: { "Content-Type": "application/json" },
       body: JSON.stringify(form),
     });
 
+    const data = await res.json();
+
     if (res.ok) {
-      router.push("/sign-in");
+      setSuccessMessage("Account created! Please check your email to verify your account.");
+      setForm({ name: "", email: "", password: "" });
     } else {
-      alert("User already exists or error occurred");
+      setErrorMessage(data.message || "User already exists or an error occurred");
     }
   };
 
@@ -51,14 +57,17 @@ export default function SignUpPage() {
       transition={{ duration: 0.5, ease: "easeOut" }}
       className="min-h-screen relative flex items-center justify-center bg-gradient-to-br from-blue-100 to-indigo-200 px-4"
     >
-       <div className="absolute top-10 left-10">
-    <FloatingCube />
-  </div>
+      <div className="absolute top-10 left-10">
+        <FloatingCube />
+      </div>
       <form
         onSubmit={handleRegister}
         className="w-full max-w-md p-8 bg-white rounded-2xl shadow-lg space-y-6"
       >
         <h2 className="text-3xl font-bold text-center text-indigo-700">Create Account</h2>
+
+        {successMessage && <p className="text-green-600 text-center">{successMessage}</p>}
+        {errorMessage && <p className="text-red-600 text-center">{errorMessage}</p>}
 
         <input
           className="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
